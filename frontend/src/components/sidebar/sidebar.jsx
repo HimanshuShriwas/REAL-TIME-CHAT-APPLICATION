@@ -1,6 +1,6 @@
 import React from 'react'
-import SearchInput from '../SearchInput'
-import Conversations from './conversations'
+import SearchInput from './SearchInput'
+import Conversations from './conversations.jsx'
 import LogoutButton from './Logout'
 const Sidebar = () => {
   return (
@@ -15,5 +15,4 @@ const Sidebar = () => {
     
   )
 }
-
 export default Sidebar

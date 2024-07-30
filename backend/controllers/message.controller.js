@@ -1,5 +1,6 @@
 import Conversation from '../models/connversation.model.js';
 import Message from '../models/message.model.js';
+import {getReceiverSocketId} from '../socket/socket.js';
 
 export const sendMessage = async (req, res) => {
 try {
@@ -32,6 +33,14 @@ try {
 
     // this will run in parrallel
     await Promise.all([conversation.save(),newMessage.save()]);
+   
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+        //this method is used to send message to specific client 
+        io.to(getReceiverSocketId).emit("newMessage",newMessage)
+    }   
+
+
 
     res.status(201).json(newMessage)
 }
@@ -64,45 +73,3 @@ export const getMessages = async (req,res)=>{
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//     try {
-//       const { id } = req.params;
-//       const { message } = req.body;
-  
-//       if (!message) {
-//         return res.status(400).json({ error: "Message content is required" });
-//       }
-  
-//       // Example logic to handle sending a message
-//       // Replace this with your actual message sending logic
-//       const newMessage = {
-//         id,
-//         message,
-//         timestamp: new Date()
-//       };
-  
-//       // Simulate saving the message to the database
-//       console.log(`Message sent to ${id}: ${message}`);
-  
-//       res.status(201).json({ message: "Message sent successfully", data: newMessage });
-//     } catch (error) {
-//       console.log("Error in sendMessage controller", error.message);
-//       res.status(500).json({ error: "Internal server error" });
-//     }
-//   };
